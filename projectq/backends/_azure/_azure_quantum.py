@@ -41,7 +41,7 @@ try:
     from azure.quantum.target import IonQ, Quantinuum, Target
     from azure.quantum.target.target_factory import TargetFactory
 except ImportError:  # pragma: no cover
-    raise ImportError(
+    raise ImportError(  # pylint: disable=raise-missing-from
         "Missing optional 'azure-quantum' dependencies. To install run: pip install projectq[azure-quantum]"
     )
 
@@ -138,7 +138,6 @@ class AzureQuantumBackend(BasicEngine):  # pylint: disable=too-many-instance-att
         Args:
             cmd: Command to store
         """
-
         if self._clear:
             self._probabilities = {}
             self._clear = False
@@ -192,7 +191,8 @@ class AzureQuantumBackend(BasicEngine):  # pylint: disable=too-many-instance-att
         """
         if self._provider_id == IONQ_PROVIDER_ID:
             return is_available_ionq(cmd)
-        elif self._provider_id == QUANTINUUM_PROVIDER_ID:
+
+        if self._provider_id == QUANTINUUM_PROVIDER_ID:
             return is_available_quantinuum(cmd)
 
         return False
@@ -209,7 +209,7 @@ class AzureQuantumBackend(BasicEngine):  # pylint: disable=too-many-instance-att
     def _target(self):
         target = self._target_factory.get_targets(name=self._target_name, provider_id=self._provider_id)
 
-        if type(target) is list and len(target) == 0:  # pragma: no cover
+        if isinstance(target, list) and len(target) == 0:  # pragma: no cover
             raise AzureQuantumTargetNotFoundError(
                 'Target {} is not available on workspace {}.'.format(self._target_name, self._workspace.name)
             )
@@ -218,12 +218,12 @@ class AzureQuantumBackend(BasicEngine):  # pylint: disable=too-many-instance-att
 
     @property
     def current_availability(self):
-        """Current availability for given target."""
+        """Get current availability for given target."""
         return self._target.current_availability
 
     @property
     def average_queue_time(self):
-        """Average queue time for given target."""
+        """Get average queue time for given target."""
         return self._target.average_queue_time
 
     def get_probability(self, state, qureg):
@@ -283,7 +283,8 @@ class AzureQuantumBackend(BasicEngine):  # pylint: disable=too-many-instance-att
 
         if self._provider_id == IONQ_PROVIDER_ID:
             return {"qubits": qubits, "circuit": self._circuit}
-        elif self._provider_id == QUANTINUUM_PROVIDER_ID:
+
+        if self._provider_id == QUANTINUUM_PROVIDER_ID:
             measurement_gates = ""
 
             for measured_id in self._measured_ids:
@@ -295,6 +296,8 @@ class AzureQuantumBackend(BasicEngine):  # pylint: disable=too-many-instance-att
                 f"{self._circuit}\n{measurement_gates}"
             )
 
+        raise RuntimeError("Invalid Azure Quantum target.")
+
     @property
     def _metadata(self):
         qubit_mapping = self.main_engine.mapper.current_mapping
@@ -305,9 +308,7 @@ class AzureQuantumBackend(BasicEngine):  # pylint: disable=too-many-instance-att
 
     def estimate_cost(self, **kwargs):
         """Estimate cost for the circuit this object has built during engine execution."""
-        return self._target.estimate_cost(
-            circuit=self._input_data, num_shots=self._num_runs, **kwargs  # noqa  # noqa
-        )  # noqa
+        return self._target.estimate_cost(circuit=self._input_data, num_shots=self._num_runs, **kwargs)
 
     def _run(self):  # pylint: disable=too-many-locals
         """Run the circuit this object has built during engine execution."""
@@ -349,6 +350,8 @@ class AzureQuantumBackend(BasicEngine):  # pylint: disable=too-many-instance-att
         elif self._provider_id == QUANTINUUM_PROVIDER_ID:
             histogram = Counter(res["c"])
             self._probabilities = {k: v / self._num_runs for k, v in histogram.items()}
+        else:
+            raise RuntimeError("Invalid Azure Quantum target.")
 
         # Set a single measurement result
         bitstring = np.random.choice(list(self._probabilities.keys()), p=list(self._probabilities.values()))
