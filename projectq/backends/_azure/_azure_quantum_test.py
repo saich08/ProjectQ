@@ -68,8 +68,8 @@ def mock_workspace():
     workspace.append_user_agent('projectq')
 
     workspace._client = mock.MagicMock()
-    workspace._client.providers = mock.MagicMock()  # noqa
-    workspace._client.providers.get_status.return_value = mock_provider_statuses()  # noqa
+    workspace._client.providers = mock.MagicMock()  # pylint: disable=protected-access
+    workspace._client.providers.get_status.return_value = mock_provider_statuses()  # pylint: disable=protected-access
 
     return workspace
 
@@ -181,9 +181,9 @@ def test_run_ionq_get_probabilities(use_hardware, target_name, provider_id):
     circuit = main_engine.allocate_qureg(3)
     q0, q1, q2 = circuit
 
-    H | q0  # noqa
-    CX | (q0, q1)  # noqa
-    CX | (q1, q2)  # noqa
+    H | q0
+    CX | (q0, q1)
+    CX | (q1, q2)
     All(Measure) | circuit
 
     main_engine.flush()
@@ -326,9 +326,9 @@ def test_run_quantinuum_get_probabilities(use_hardware, target_name, provider_id
     circuit = main_engine.allocate_qureg(3)
     q0, q1, q2 = circuit
 
-    H | q0  # noqa
-    CX | (q0, q1)  # noqa
-    CX | (q1, q2)  # noqa
+    H | q0
+    CX | (q0, q1)
+    CX | (q1, q2)
     All(Measure) | circuit
 
     main_engine.flush()
@@ -364,9 +364,9 @@ def test_run_ionq_get_probability(use_hardware, target_name, provider_id):
     circuit = main_engine.allocate_qureg(3)
     q0, q1, q2 = circuit
 
-    H | q0  # noqa
-    CX | (q0, q1)  # noqa
-    CX | (q1, q2)  # noqa
+    H | q0
+    CX | (q0, q1)
+    CX | (q1, q2)
     All(Measure) | circuit
 
     main_engine.flush()
@@ -515,9 +515,9 @@ def test_run_quantinuum_get_probability(use_hardware, target_name, provider_id):
     circuit = main_engine.allocate_qureg(3)
     q0, q1, q2 = circuit
 
-    H | q0  # noqa
-    CX | (q0, q1)  # noqa
-    CX | (q1, q2)  # noqa
+    H | q0
+    CX | (q0, q1)
+    CX | (q1, q2)
     All(Measure) | circuit
 
     main_engine.flush()
@@ -593,9 +593,9 @@ def test_run_ionq_retrieve_execution(use_hardware, target_name, provider_id):
     circuit = main_engine.allocate_qureg(3)
     q0, q1, q2 = circuit
 
-    H | q0  # noqa
-    CX | (q0, q1)  # noqa
-    CX | (q1, q2)  # noqa
+    H | q0
+    CX | (q0, q1)
+    CX | (q1, q2)
     All(Measure) | circuit
 
     main_engine.flush()
@@ -744,9 +744,9 @@ def test_run_quantinuum_retrieve_execution(use_hardware, target_name, provider_i
     circuit = main_engine.allocate_qureg(3)
     q0, q1, q2 = circuit
 
-    H | q0  # noqa
-    CX | (q0, q1)  # noqa
-    CX | (q1, q2)  # noqa
+    H | q0
+    CX | (q0, q1)
+    CX | (q1, q2)
     All(Measure) | circuit
 
     main_engine.flush()

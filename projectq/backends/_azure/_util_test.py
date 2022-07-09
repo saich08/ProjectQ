@@ -17,7 +17,7 @@ import math
 
 import pytest
 
-from projectq.backends._azure._util import (  # noqa
+from projectq.backends._azure._util import (
     Vdag,
     is_available_ionq,
     is_available_quantinuum,

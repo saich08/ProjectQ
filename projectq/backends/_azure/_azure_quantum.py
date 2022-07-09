@@ -200,7 +200,7 @@ class AzureQuantumBackend(BasicEngine):  # pylint: disable=too-many-instance-att
     @property
     def _target_factory(self):
         target_factory = TargetFactory(
-            base_cls=Target, workspace=self._workspace, default_targets=AzureQuantumBackend.DEFAULT_TARGETS  # noqa
+            base_cls=Target, workspace=self._workspace, default_targets=AzureQuantumBackend.DEFAULT_TARGETS
         )
 
         return target_factory
