@@ -13,18 +13,10 @@
 #   See the License for the specific language governing permissions and
 #   limitations under the License.
 
-from .._exceptions import (
-    DeviceOfflineError,
-    RequestTimeoutError,
-)
+from .._exceptions import DeviceOfflineError, RequestTimeoutError
 
 
-def _get_results(
-    job,
-    num_retries=100,
-    interval=1,
-    verbose=False
-):
+def _get_results(job, num_retries=100, interval=1, verbose=False):
     if verbose:  # pragma: no cover
         print("- Waiting for results. [Job ID: {}]".format(job.id))
 
@@ -34,15 +26,7 @@ def _get_results(
         raise RequestTimeoutError("Timeout. The ID of your submitted job is {}.".format(job.id))
 
 
-def send(
-    input_data,
-    num_shots,
-    target,
-    num_retries=100,
-    interval=1,
-    verbose=False,
-    **kwargs
-):
+def send(input_data, num_shots, target, num_retries=100, interval=1, verbose=False, **kwargs):
     """Submit a job to the Azure Quantum.
 
     Args:
@@ -70,18 +54,9 @@ def send(
     if verbose:  # pragma: no cover
         print("- Running code: {}".format(input_data))
 
-    job = target.submit(
-        circuit=input_data,
-        num_shots=num_shots,
-        **kwargs
-    )
+    job = target.submit(circuit=input_data, num_shots=num_shots, **kwargs)
 
-    res = _get_results(
-        job=job,
-        num_retries=num_retries,
-        interval=interval,
-        verbose=verbose
-    )
+    res = _get_results(job=job, num_retries=num_retries, interval=interval, verbose=verbose)
 
     if verbose:  # pragma: no cover
         print("- Done.")
@@ -89,13 +64,7 @@ def send(
     return res
 
 
-def retrieve(
-    job_id,
-    target,
-    num_retries=100,
-    interval=1,
-    verbose=False
-):
+def retrieve(job_id, target, num_retries=100, interval=1, verbose=False):
     """Retrieve a job from Azure Quantum.
 
     Args:
@@ -114,12 +83,7 @@ def retrieve(
 
     job = target.workspace.get_job(job_id=job_id)
 
-    res = _get_results(
-        job=job,
-        num_retries=num_retries,
-        interval=interval,
-        verbose=verbose
-    )
+    res = _get_results(job=job, num_retries=num_retries, interval=interval, verbose=verbose)
 
     if verbose:  # pragma: no cover
         print("- Done.")

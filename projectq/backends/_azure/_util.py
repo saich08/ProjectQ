@@ -14,15 +14,14 @@
 #   limitations under the License.
 
 from projectq.meta import get_control_count, has_negative_control
-from projectq.ops import get_inverse
 from projectq.ops import (
     AllocateQubitGate,
     BarrierGate,
     ControlledGate,
-    DeallocateQubitGate,
     DaggeredGate,
-    MeasureGate,
+    DeallocateQubitGate,
     HGate,
+    MeasureGate,
     R,
     Rx,
     Rxx,
@@ -38,11 +37,11 @@ from projectq.ops import (
     TGate,
     XGate,
     YGate,
-    ZGate
+    ZGate,
+    get_inverse,
 )
 
 from .._exceptions import InvalidCommandError
-
 
 IONQ_PROVIDER_ID = 'ionq'
 QUANTINUUM_PROVIDER_ID = 'quantinuum'
@@ -80,7 +79,7 @@ QUANTINUUM_GATE_MAP = {
     TGate: 't',
     XGate: 'x',
     YGate: 'y',
-    ZGate: 'z'
+    ZGate: 'z',
 }  # excluding controlled, conjugate-transpose and meta gates
 
 QUANTINUUM_SUPPORTED_GATES = tuple(QUANTINUUM_GATE_MAP.keys())
@@ -201,17 +200,14 @@ def to_json(cmd):
     # Controlled gates get special treatment too
     if isinstance(gate, ControlledGate):
         all_qubits = [qb.id for qureg in cmd.qubits for qb in qureg]
-        controls = all_qubits[:gate._n]  # noqa
-        targets = all_qubits[gate._n:]  # noqa
+        controls = all_qubits[: gate._n]  # noqa
+        targets = all_qubits[gate._n :]  # noqa
     else:
         controls = [qb.id for qb in cmd.control_qubits]
         targets = [qb.id for qureg in cmd.qubits for qb in qureg]
 
     # Initialize the gate dict
-    gate_dict = {
-        'gate': gate_name,
-        'targets': targets
-    }
+    gate_dict = {'gate': gate_name, 'targets': targets}
 
     # Check if we have a rotation
     if isinstance(gate, (R, Rx, Ry, Rz, Rxx, Ryy, Rzz)):
@@ -259,8 +255,8 @@ def to_qasm(cmd):
     # Controlled gates get special treatment too
     if isinstance(gate, ControlledGate):
         all_qubits = [qb.id for qureg in cmd.qubits for qb in qureg]
-        controls = all_qubits[:gate._n]  # noqa
-        targets = all_qubits[gate._n:]  # noqa
+        controls = all_qubits[: gate._n]  # noqa
+        targets = all_qubits[gate._n :]  # noqa
     else:
         controls = [qb.id for qb in cmd.control_qubits]
         targets = [qb.id for qureg in cmd.qubits for qb in qureg]
@@ -286,8 +282,7 @@ def to_qasm(cmd):
         # 2-Controlled gates
         if len(controls) == 2:
             gate_name = 'cc' + gate_name
-            return "{} q[{}], q[{}], q[{}];".format(
-                gate_name, controls[0], controls[1], targets[0])
+            return "{} q[{}], q[{}], q[{}];".format(gate_name, controls[0], controls[1], targets[0])
 
     # Single qubit gates
     elif len(targets) == 1:
