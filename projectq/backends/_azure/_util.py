@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-#   Copyright 2021 ProjectQ-Framework (www.projectq.ch)
+#   Copyright 2022 ProjectQ-Framework (www.projectq.ch)
 #
 #   Licensed under the Apache License, Version 2.0 (the "License");
 #   you may not use this file except in compliance with the License.
@@ -152,7 +152,7 @@ def is_available_quantinuum(cmd):
     while isinstance(gate, ControlledGate):
         gate = gate._gate  # noqa
 
-    # TODO: NEEDED CONFORMATION- Does Quantinuum support more than 2 control gates?
+    # TODO: NEEDED CONFIRMATION- Does Quantinuum support more than 2 control gates?
     if 0 < num_ctrl_qubits <= 2:
         return isinstance(gate, (XGate, ZGate))
 

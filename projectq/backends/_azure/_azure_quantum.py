@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-#   Copyright 2021 ProjectQ-Framework (www.projectq.ch)
+#   Copyright 2022 ProjectQ-Framework (www.projectq.ch)
 #
 #   Licensed under the Apache License, Version 2.0 (the "License");
 #   you may not use this file except in compliance with the License.
@@ -76,7 +76,7 @@ class AzureQuantumBackend(BasicEngine):  # pylint: disable=too-many-instance-att
 
         Args:
             use_hardware (bool, optional): Whether or not to use real hardware or just a simulator. If False,
-            regardless of the value of ```target_name```, ```ionq.simulator``` used for IonQ provider and
+                regardless of the value of ```target_name```, ```ionq.simulator``` used for IonQ provider and
                 ```quantinuum.hqs-lt-s1-apival``` used for Quantinuum provider. Defaults to False.
             num_runs (int, optional): Number of times to run circuits. Defaults to 100.
             verbose (bool, optional): If True, print statistics after job results have been collected. Defaults to
@@ -96,7 +96,7 @@ class AzureQuantumBackend(BasicEngine):  # pylint: disable=too-many-instance-att
             self._provider_id = IONQ_PROVIDER_ID
         elif target_name in Quantinuum.target_names:
             self._provider_id = QUANTINUUM_PROVIDER_ID
-        else:  # pragma: no cover
+        else:
             raise AzureQuantumTargetNotFoundError('Target {0} does not exit.'.format(target_name))
 
         if use_hardware:
@@ -144,7 +144,7 @@ class AzureQuantumBackend(BasicEngine):  # pylint: disable=too-many-instance-att
         Translates the command and stores it in a local variable (self._cmds).
 
         Args:
-            cmd: Command to store
+            cmd (Command): Command to store
         """
 
         if self._clear:
@@ -222,7 +222,8 @@ class AzureQuantumBackend(BasicEngine):  # pylint: disable=too-many-instance-att
             provider_id=self._provider_id
         )
 
-        if type(target) is list and len(target) == 0:  # pragma: no cover
+        # TODO: TEST THIS <BEFORE COMMIT>
+        if isinstance(target, list) and len(target) == 0:  # pragma: no cover
             raise AzureQuantumTargetNotFoundError(
                 'Target {} is not available on workspace {}.'.format(
                     self._target_name, self._workspace.name)
@@ -255,10 +256,7 @@ class AzureQuantumBackend(BasicEngine):  # pylint: disable=too-many-instance-att
 
         probs = self.get_probabilities(qureg)
 
-        try:
-            return probs[state]
-        except KeyError:
-            return 0.0
+        return probs.get(state, 0.0)
 
     def get_probabilities(self, qureg):
         """
@@ -309,6 +307,8 @@ class AzureQuantumBackend(BasicEngine):  # pylint: disable=too-many-instance-att
 
             return f"OPENQASM 2.0;\ninclude \"qelib1.inc\";\nqreg q[{qubits}];\ncreg c[{qubits}];" \
                    f"{self._circuit}\n{measurement_gates}"
+        else:
+            raise RuntimeError('')  # TODO: UPDATE THIS <BEFORE COMMIT>
 
     @property
     def _metadata(self):
@@ -371,6 +371,8 @@ class AzureQuantumBackend(BasicEngine):  # pylint: disable=too-many-instance-att
             self._probabilities = {
                 k: v / self._num_runs for k, v in histogram.items()
             }
+        else:
+            raise RuntimeError('')  # TODO: UPDATE THIS <BEFORE COMMIT>
 
         # Set a single measurement result
         bitstring = np.random.choice(list(self._probabilities.keys()), p=list(self._probabilities.values()))
