@@ -13,6 +13,8 @@
 #   See the License for the specific language governing permissions and
 #   limitations under the License.
 
+"""Tests for projectq.backends._azure._azure_quantum_client.py."""
+
 from unittest import mock
 
 from projectq.backends._azure._azure_quantum_client import retrieve, send
