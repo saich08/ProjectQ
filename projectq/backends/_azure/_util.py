@@ -310,17 +310,3 @@ def to_qasm(cmd):  # pylint: disable=too-many-return-statements,too-many-branche
 
     # Invalid command
     raise InvalidCommandError('Invalid command:', str(cmd))
-
-
-def rearrange_result(input_result, length):
-    """Turn ``input_result`` from an integer into a bit-string.
-
-    Args:
-        input_result (int): An integer representation of qubit states.
-        length (int): The total number of bits (for padding, if needed).
-
-    Returns:
-        str: A bit-string representation of ``input_result``.
-    """
-    bin_input = list(bin(input_result)[2:].rjust(length, '0'))
-    return ''.join(bin_input)[::-1]

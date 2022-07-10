@@ -19,6 +19,7 @@ from collections import Counter
 
 import numpy as np
 
+from projectq.backends._ionq._ionq import _rearrange_result
 from projectq.cengines import BasicEngine
 from projectq.meta import LogicalQubitIDTag
 from projectq.ops import AllocateQubitGate, DeallocateQubitGate, FlushGate, MeasureGate
@@ -31,7 +32,6 @@ from ._util import (
     QUANTINUUM_PROVIDER_ID,
     is_available_ionq,
     is_available_quantinuum,
-    rearrange_result,
     to_json,
     to_qasm,
 )
@@ -342,7 +342,7 @@ class AzureQuantumBackend(BasicEngine):  # pylint: disable=too-many-instance-att
 
         if self._provider_id == IONQ_PROVIDER_ID:
             self._probabilities = {
-                rearrange_result(int(k), len(self._measured_ids)): v for k, v in res["histogram"].items()
+                _rearrange_result(int(k), len(self._measured_ids)): v for k, v in res["histogram"].items()
             }
         elif self._provider_id == QUANTINUUM_PROVIDER_ID:
             histogram = Counter(res["c"])
