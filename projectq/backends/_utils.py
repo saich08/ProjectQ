@@ -26,5 +26,4 @@ def _rearrange_result(input_result, length):
     Returns:
         str: A bit-string representation of ``input_result``.
     """
-    bin_input = list(bin(input_result)[2:].rjust(length, '0'))
-    return ''.join(bin_input)[::-1]
+    return f'{input_result:0{length}b}'[::-1]

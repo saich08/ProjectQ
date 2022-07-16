@@ -15,8 +15,22 @@
 
 """Tests for projectq._utils.py."""
 
-# from _utils import _rearrange_result
+import pytest
+
+from ._utils import _rearrange_result
 
 
-def test_rearrange_result():
-    assert True
+@pytest.mark.parametrize(
+    "input_result, length, expected_result",
+    [
+        (5, 3, '101'),
+        (5, 4, '1010'),
+        (5, 5, '10100'),
+        (16, 5, '00001'),
+        (16, 6, '000010'),
+        (63, 6, '111111'),
+        (63, 7, '1111110'),
+    ],
+)
+def test_rearrange_result(input_result, length, expected_result):
+    assert expected_result == _rearrange_result(input_result, length)
