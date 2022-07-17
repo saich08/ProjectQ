@@ -101,6 +101,8 @@ class AzureQuantumBackend(BasicEngine):  # pylint: disable=too-many-instance-att
                     self._target_name = 'quantinuum.hqs-lt-s1-apival'
                 else:
                     self._target_name = target_name
+            else:  # pragma: no cover
+                raise RuntimeError("Invalid Azure Quantum target.")
 
         if workspace is None:
             workspace = Workspace(**kwargs)
@@ -129,7 +131,7 @@ class AzureQuantumBackend(BasicEngine):  # pylint: disable=too-many-instance-att
         self._circuit = None
         self._clear = True
 
-    def _store(self, cmd):
+    def _store(self, cmd):  # pylint: disable=too-many-branches
         """
         Temporarily store the command cmd.
 
@@ -179,6 +181,9 @@ class AzureQuantumBackend(BasicEngine):  # pylint: disable=too-many-instance-att
             if qasm_cmd:
                 self._circuit += '\n{0}'.format(qasm_cmd)
 
+        else:  # pragma: no cover
+            raise RuntimeError("Invalid Azure Quantum target.")
+
     def is_available(self, cmd):
         """
         Test if this backend is available to process the provided command.
@@ -195,7 +200,7 @@ class AzureQuantumBackend(BasicEngine):  # pylint: disable=too-many-instance-att
         if self._provider_id == QUANTINUUM_PROVIDER_ID:
             return is_available_quantinuum(cmd)
 
-        return False
+        return False  # pragma: no cover
 
     @property
     def _target_factory(self):
@@ -293,7 +298,7 @@ class AzureQuantumBackend(BasicEngine):  # pylint: disable=too-many-instance-att
                 f"{self._circuit}\n{measurement_gates}"
             )
 
-        raise RuntimeError("Invalid Azure Quantum target.")
+        raise RuntimeError("Invalid Azure Quantum target.")  # pragma: no cover
 
     @property
     def _metadata(self):
@@ -347,7 +352,7 @@ class AzureQuantumBackend(BasicEngine):  # pylint: disable=too-many-instance-att
         elif self._provider_id == QUANTINUUM_PROVIDER_ID:
             histogram = Counter(res["c"])
             self._probabilities = {k: v / self._num_runs for k, v in histogram.items()}
-        else:
+        else:  # pragma: no cover
             raise RuntimeError("Invalid Azure Quantum target.")
 
         # Set a single measurement result

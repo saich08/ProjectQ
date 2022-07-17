@@ -84,6 +84,22 @@ def mock_workspace():
     return workspace
 
 
+def test_initialize_azure_backend_without_kwargs():
+    workspace = mock_workspace()
+    _ = AzureQuantumBackend(use_hardware=False, target_name='ionq.simulator', workspace=workspace)
+
+
+def test_initialize_azure_backend_with_kwargs():
+    _ = AzureQuantumBackend(
+        use_hardware=False,
+        target_name='ionq.simulator',
+        subscription_id=ZERO_GUID,
+        resource_group='testResourceGroup',
+        name='testWorkspace',
+        location='East US',
+    )
+
+
 @has_azure_quantum
 @pytest.mark.parametrize(
     "use_hardware, target_name, provider_id, expected_target_name",
@@ -124,11 +140,8 @@ def test_azure_quantum_quantinuum_target(use_hardware, target_name, provider_id,
 def test_azure_quantum_invalid_target():
     workspace = mock_workspace()
 
-    try:
+    with pytest.raises(AzureQuantumTargetNotFoundError):
         AzureQuantumBackend(use_hardware=False, target_name='invalid-target', workspace=workspace)
-        assert False
-    except AzureQuantumTargetNotFoundError:
-        assert True
 
 
 @has_azure_quantum
@@ -563,6 +576,40 @@ def test_run_quantinuum_get_probability(use_hardware, target_name, provider_id):
     assert backend.get_probability('111', circuit) == pytest.approx(0.59)
 
 
+def test_run_get_probability_invalid_state():
+    projectq.backends._azure._azure_quantum.send = mock.MagicMock(
+        return_value={'histogram': {'0': 0.5, '1': 0.0, '2': 0.0, '3': 0.0, '4': 0.0, '5': 0.0, '6': 0.0, '7': 0.5}}
+    )
+
+    workspace = mock_workspace()
+
+    backend = AzureQuantumBackend(use_hardware='False', target_name='ionq.simulator', workspace=workspace, verbose=True)
+
+    mapper = BasicMapperEngine()
+    max_qubits = 3
+
+    mapping = {}
+    for i in range(max_qubits):
+        mapping[i] = i
+
+    mapper.current_mapping = mapping
+
+    main_engine = MainEngine(backend=backend, engine_list=[mapper], verbose=True)
+
+    circuit = main_engine.allocate_qureg(3)
+    q0, q1, q2 = circuit
+
+    H | q0
+    CX | (q0, q1)
+    CX | (q1, q2)
+    All(Measure) | circuit
+
+    main_engine.flush()
+
+    with pytest.raises(ValueError):
+        _ = backend.get_probability('0000', circuit)
+
+
 @has_azure_quantum
 def test_run_no_circuit():
     workspace = mock_workspace()
@@ -584,12 +631,8 @@ def test_run_no_circuit():
 
     main_engine.flush()
 
-    try:
+    with pytest.raises(RuntimeError):
         _ = backend.get_probabilities(circuit)
-
-        assert False, 'Expected RuntimeError, run without any circuit'
-    except RuntimeError:
-        assert True
 
 
 @has_azure_quantum
