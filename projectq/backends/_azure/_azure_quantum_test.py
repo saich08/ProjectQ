@@ -574,6 +574,7 @@ def test_run_quantinuum_get_probability(use_hardware, target_name, provider_id):
     assert backend.get_probability('111', circuit) == pytest.approx(0.59)
 
 
+@has_azure_quantum
 def test_estimate_cost():
     projectq.backends._azure._azure_quantum.send = mock.MagicMock(
         return_value={'histogram': {'0': 0.5, '1': 0.0, '2': 0.0, '3': 0.0, '4': 0.0, '5': 0.0, '6': 0.0, '7': 0.5}}
