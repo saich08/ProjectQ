@@ -23,7 +23,7 @@ def _get_results(job, num_retries=100, interval=1, verbose=False):
 
     try:
         return job.get_results(timeout_secs=num_retries * interval)
-    except TimeoutError:  # pragma: no cover
+    except TimeoutError:
         raise RequestTimeoutError(  # pylint: disable=raise-missing-from
             f"Timeout. The ID of your submitted job is {job.id}."
         )

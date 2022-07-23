@@ -172,9 +172,9 @@ def test_is_available_ionq():
     with mock.patch('projectq.backends._azure._azure_quantum.is_available_ionq') as is_available_ionq_patch:
         _, main_engine = _get_backend_and_engine(use_hardware=False, target_name='ionq.simulator')
 
-        qb0 = main_engine.allocate_qubit()
+        q0 = main_engine.allocate_qubit()
 
-        cmd = Command(main_engine, H, (qb0,))
+        cmd = Command(main_engine, H, (q0,))
         main_engine.is_available(cmd)
 
         is_available_ionq_patch.assert_called()
@@ -185,9 +185,9 @@ def test_is_available_quantinuum():
     with mock.patch('projectq.backends._azure._azure_quantum.is_available_quantinuum') as is_available_quantinuum_patch:
         _, main_engine = _get_backend_and_engine(use_hardware=False, target_name='quantinuum.hqs-lt-s1-sim')
 
-        qb0 = main_engine.allocate_qubit()
+        q0 = main_engine.allocate_qubit()
 
-        cmd = Command(main_engine, H, (qb0,))
+        cmd = Command(main_engine, H, (q0,))
         main_engine.is_available(cmd)
 
         is_available_quantinuum_patch.assert_called()
