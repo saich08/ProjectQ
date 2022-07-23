@@ -26,7 +26,7 @@ from projectq.types import WeakQubitRef
 from .._utils import _rearrange_result
 from ._azure_quantum_client import retrieve, send
 from ._exceptions import AzureQuantumTargetNotFoundError
-from ._util import (
+from ._utils import (
     IONQ_PROVIDER_ID,
     QUANTINUUM_PROVIDER_ID,
     is_available_ionq,
