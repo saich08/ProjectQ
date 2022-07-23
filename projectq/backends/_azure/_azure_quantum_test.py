@@ -62,12 +62,8 @@ def mock_providers():
     quantinuum_provider = mock.MagicMock()
     quantinuum_provider.id = 'quantinuum'
     quantinuum_provider.targets = [
-        mock_target(
-            target_id='quantinuum.hqs-lt-s1-apival', current_availability='Available', average_queue_time=3000
-        ),
-        mock_target(
-            target_id='quantinuum.hqs-lt-s1-sim', current_availability='Available', average_queue_time=4000
-        ),
+        mock_target(target_id='quantinuum.hqs-lt-s1-apival', current_availability='Available', average_queue_time=3000),
+        mock_target(target_id='quantinuum.hqs-lt-s1-sim', current_availability='Available', average_queue_time=4000),
         mock_target(target_id='quantinuum.hqs-lt-s1', current_availability='Degraded', average_queue_time=5000),
     ]
 

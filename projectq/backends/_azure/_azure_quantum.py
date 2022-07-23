@@ -212,9 +212,7 @@ class AzureQuantumBackend(BasicEngine):  # pylint: disable=too-many-instance-att
     @property
     def _target(self):
         target = self._target_factory(
-            workspace=self._workspace,
-            target_name=self._target_name,
-            provider_id=self._provider_id
+            workspace=self._workspace, target_name=self._target_name, provider_id=self._provider_id
         )
 
         if isinstance(target, list) and len(target) == 0:  # pragma: no cover
