@@ -86,7 +86,6 @@ def mock_workspace():
 
 def _get_backend_and_engine(use_hardware, target_name, retrieve_execution=None, max_qubits=3):
     workspace = mock_workspace()
-
     backend = AzureQuantumBackend(
         use_hardware=use_hardware,
         target_name=target_name,
@@ -110,12 +109,14 @@ def _get_backend_and_engine(use_hardware, target_name, retrieve_execution=None, 
 @has_azure_quantum
 def test_initialize_azure_backend_without_kwargs():
     workspace = mock_workspace()
-    _ = AzureQuantumBackend(use_hardware=False, target_name='ionq.simulator', workspace=workspace)
+    backend = AzureQuantumBackend(use_hardware=False, target_name='ionq.simulator', workspace=workspace)
+
+    assert backend._target_name == 'ionq.simulator'
 
 
 @has_azure_quantum
 def test_initialize_azure_backend_with_kwargs():
-    _ = AzureQuantumBackend(
+    backend = AzureQuantumBackend(
         use_hardware=False,
         target_name='ionq.simulator',
         subscription_id=ZERO_GUID,
@@ -123,6 +124,8 @@ def test_initialize_azure_backend_with_kwargs():
         name='testWorkspace',
         location='East US',
     )
+
+    assert backend._target_name == 'ionq.simulator'
 
 
 @has_azure_quantum
@@ -136,7 +139,6 @@ def test_initialize_azure_backend_with_kwargs():
 )
 def test_azure_quantum_ionq_target(use_hardware, target_name, provider_id, expected_target_name):
     workspace = mock_workspace()
-
     backend = AzureQuantumBackend(use_hardware=use_hardware, target_name=target_name, workspace=workspace)
 
     assert backend._target_name == expected_target_name
@@ -155,7 +157,6 @@ def test_azure_quantum_ionq_target(use_hardware, target_name, provider_id, expec
 )
 def test_azure_quantum_quantinuum_target(use_hardware, target_name, provider_id, expected_target_name):
     workspace = mock_workspace()
-
     backend = AzureQuantumBackend(use_hardware=use_hardware, target_name=target_name, workspace=workspace)
 
     assert backend._target_name == expected_target_name
@@ -208,7 +209,6 @@ def test_is_available_quantinuum():
 )
 def test_current_availability(use_hardware, target_name, provider_id, current_availability):
     workspace = mock_workspace()
-
     backend = AzureQuantumBackend(use_hardware=use_hardware, target_name=target_name, workspace=workspace)
 
     assert backend.current_availability == current_availability
@@ -227,7 +227,6 @@ def test_current_availability(use_hardware, target_name, provider_id, current_av
 )
 def test_average_queue_time(use_hardware, target_name, provider_id, average_queue_time):
     workspace = mock_workspace()
-
     backend = AzureQuantumBackend(use_hardware=use_hardware, target_name=target_name, workspace=workspace)
 
     assert backend.average_queue_time == average_queue_time
