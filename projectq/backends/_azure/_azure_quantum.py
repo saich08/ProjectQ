@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 #   Copyright 2022 ProjectQ-Framework (www.projectq.ch)
 #
 #   Licensed under the Apache License, Version 2.0 (the "License");
@@ -89,7 +88,7 @@ class AzureQuantumBackend(BasicEngine):  # pylint: disable=too-many-instance-att
         elif target_name in Quantinuum.target_names:
             self._provider_id = QUANTINUUM_PROVIDER_ID
         else:
-            raise AzureQuantumTargetNotFoundError('Target {0} does not exit.'.format(target_name))
+            raise AzureQuantumTargetNotFoundError(f'Target {target_name} does not exit.')
 
         if use_hardware:
             self._target_name = target_name
@@ -179,7 +178,7 @@ class AzureQuantumBackend(BasicEngine):  # pylint: disable=too-many-instance-att
 
             qasm_cmd = to_qasm(cmd)
             if qasm_cmd:
-                self._circuit += '\n{0}'.format(qasm_cmd)
+                self._circuit += f'\n{qasm_cmd}'
 
         else:  # pragma: no cover
             raise RuntimeError("Invalid Azure Quantum target.")
@@ -216,7 +215,7 @@ class AzureQuantumBackend(BasicEngine):  # pylint: disable=too-many-instance-att
 
         if isinstance(target, list) and len(target) == 0:  # pragma: no cover
             raise AzureQuantumTargetNotFoundError(
-                'Target {} is not available on workspace {}.'.format(self._target_name, self._workspace.name)
+                f'Target {self._target_name} is not available on workspace {self._workspace.name}.'
             )
 
         return target
@@ -342,7 +341,7 @@ class AzureQuantumBackend(BasicEngine):  # pylint: disable=too-many-instance-att
 
             if res is None:
                 raise RuntimeError(
-                    "Failed to retrieve job from Azure Quantum with job id: '{}'!".format(self._retrieve_execution)
+                    f"Failed to retrieve job from Azure Quantum with job id: '{self._retrieve_execution}'!"
                 )
 
         if self._provider_id == IONQ_PROVIDER_ID:
