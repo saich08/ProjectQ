@@ -51,6 +51,7 @@ from projectq.ops import (
     get_inverse,
 )
 from projectq.types import WeakQubitRef
+
 from .._exceptions import InvalidCommandError
 
 _has_azure_quantum = True
@@ -486,7 +487,7 @@ def test_to_json_n_controlled_qubits_type_2(base_gate, num_ctrl_qubits, expected
 def test_to_json_invalid_command_gate_not_available():
     eng = MainEngine(backend=DummyEngine(), engine_list=[DummyEngine()])
     qb0 = eng.allocate_qubit()
-    
+
     cmd = Command(eng, Barrier, (qb0,))
     with pytest.raises(InvalidCommandError):
         to_json(cmd)
@@ -630,7 +631,7 @@ def test_to_qasm_n_controlled_qubits_type_2(base_gate, num_ctrl_qubits, expected
 def test_to_qasm_invalid_command_gate_not_available():
     eng = MainEngine(backend=DummyEngine(), engine_list=[DummyEngine()])
     qb0 = eng.allocate_qubit()
-    
+
     cmd = Command(eng, SqrtX, (qb0,))
     with pytest.raises(InvalidCommandError):
         to_qasm(cmd)
